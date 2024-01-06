@@ -24,11 +24,11 @@ const BottomNavigationBar = () => {
       </TouchableOpacity>
       {/* Add TouchableOpacity components for other icons */}
       {/* Example: */}
-      <TouchableOpacity onPress={() => navigateToScreen('Search')}>
+      <TouchableOpacity onPress={() => navigateToScreen('Products')}>
         <Icon
-          name={activeTab === 'Search' ? 'search' : 'search-outline'}
+          name={activeTab === 'Products' ? 'archive' : 'archive-outline'}
           size={30}
-          color={activeTab === 'Search' ? '#007bff' : 'black'}
+          color={activeTab === 'Products' ? '#007bff' : 'black'}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigateToScreen('Wishlist')}>

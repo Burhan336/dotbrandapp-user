@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TextInput, Image, StyleSheet, TouchableOpacity 
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigationBar from '../common/BottomNavigator'; // Assuming you've imported the BottomNavigationBar component
+import HeaderComponent from '../common/Header';
 
 const HomeScreen = () => {
   // Replace placeholders with actual data and styles for better aesthetics
@@ -14,7 +15,7 @@ const HomeScreen = () => {
     { uri: 'https://via.placeholder.com/350x150' },
   ]; // Replace with your images // 
   const [categories, setCategories] = useState([]);
-
+  const [brands, setBrands] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,11 +34,31 @@ const HomeScreen = () => {
       }
     };
 
+    const fetchBrands = async () => {
+        try {
+          const accessToken = await AsyncStorage.getItem('accessToken');
+          const response = await fetch('https://dotbrand-api.onrender.com/api/v1/user/brand-listing', {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          const data = await response.json();
+          const BrandsData = data.payload.brands.map(({ name, image }) => ({ name, image }));
+          setBrands(BrandsData);
+        } catch (error) {
+          console.error('Error fetching brands:', error);
+        }
+      };
+
+    fetchBrands();  
     fetchData();
   }, []);
 
   return (
     <View style={styles.container}>
+    <HeaderComponent/>
+    <ScrollView style={styles.contentContainer}>
       <View style={styles.profileSection}>
         <View style={styles.profileInfo}>
           <Image source={profileImage} style={styles.profileImage} />
@@ -62,18 +83,30 @@ const HomeScreen = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <Text style={styles.categoryHeading}>Brands</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryScroll}>
+        {brands.map((brand, index) => (
+          <TouchableOpacity key={index} style={styles.categoryCard}>
+            <Image source={{ uri: brand.image }} style={styles.categoryImage} />
+            <Text style={styles.categoryLabel}>{brand.name}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      
+      </ScrollView>
       <BottomNavigationBar />
-    </View>
+     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9f9f9',
-    paddingTop: 70,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#f9f9f9',
+      },
+      
   profileSection: {
+    marginTop:10,
     paddingHorizontal: 20,
     marginBottom: 30,
   },
@@ -124,12 +157,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: 20,
+    marginTop:10,
     
   },
   categoryScroll: {
     paddingHorizontal: 20,
-    marginBottom: 20,
-    marginTop: 5,
+    paddingVertical: 10,
+    marginBottom: 30,
+    marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },

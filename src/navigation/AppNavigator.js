@@ -3,10 +3,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "../screens/LoginScreen";
 import Home from "../screens/Home";
-import Search from "../screens/Search";
 import Cart from "../screens/Cart";
 import Profile from "../screens/Profile";
 import Wishlist from "../screens/Wishlist";
+import Products from "../screens/Products";
+import BottomNavigationBar from "../common/BottomNavigator";
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -23,9 +24,14 @@ const AppNavigator = () => {
           component={Home}
           options={{ headerShown: false }}
      />
-      <Stack.Screen
+      {/* <Stack.Screen
           name="Search"
           component={Search}
+          options={{ headerShown: false }}
+     /> */}
+     <Stack.Screen
+          name="Products"
+          component={Products}
           options={{ headerShown: false }}
      />
      <Stack.Screen
