@@ -50,6 +50,7 @@ const AppNavigator = () => {
           options={{ headerShown: false }}
      />
     </Stack.Navigator>
+    {/* <BottomNavigationBar/> */}
     </NavigationContainer>
   )
 }
