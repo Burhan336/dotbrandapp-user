@@ -13,46 +13,46 @@ const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-    <Stack.Navigator initialRouteName="LoginScreen">
-    <Stack.Screen
+      <Stack.Navigator initialRouteName="LoginScreen">
+        <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
           options={{ headerShown: false }}
-     />
-     <Stack.Screen
+        />
+        <Stack.Screen
           name="Home"
           component={Home}
           options={{ headerShown: false }}
-     />
-      {/* <Stack.Screen
+        />
+        {/* <Stack.Screen
           name="Search"
           component={Search}
           options={{ headerShown: false }}
      /> */}
-     <Stack.Screen
+        <Stack.Screen
           name="Products"
           component={Products}
           options={{ headerShown: false }}
-     />
-     <Stack.Screen
+        />
+        <Stack.Screen
           name="Cart"
           component={Cart}
           options={{ headerShown: false }}
-     />
-     <Stack.Screen
+        />
+        <Stack.Screen
           name="Profile"
           component={Profile}
           options={{ headerShown: false }}
-     />
-     <Stack.Screen
+        />
+        <Stack.Screen
           name="Wishlist"
           component={Wishlist}
           options={{ headerShown: false }}
-     />
-    </Stack.Navigator>
-    {/* <BottomNavigationBar/> */}
+        />
+      </Stack.Navigator>
+      {/* <BottomNavigationBar/> */}
     </NavigationContainer>
-  )
-}
+  );
+};
 
-export default AppNavigator
+export default AppNavigator;
