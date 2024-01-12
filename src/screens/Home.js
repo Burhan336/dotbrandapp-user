@@ -9,9 +9,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomNavigationBar from "../common/BottomNavigator"; // Assuming you've imported the BottomNavigationBar component
 import HeaderComponent from "../common/Header";
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
   // Replace placeholders with actual data and styles for better aesthetics
@@ -21,6 +23,7 @@ const HomeScreen = () => {
   const [brands, setBrands] = useState([]);
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +40,7 @@ const HomeScreen = () => {
         );
         const data = await response.json();
         const categoriesData = data.payload.categories.map(
-          ({ name, image }) => ({ name, image })
+          ({ _id, name, image }) => ({ _id, name, image })
         );
         setCategories(categoriesData);
         setLoading(false);
@@ -60,7 +63,8 @@ const HomeScreen = () => {
           }
         );
         const data = await response.json();
-        const BrandsData = data.payload.brands.map(({ name, image }) => ({
+        const BrandsData = data.payload.brands.map(({ _id, name, image }) => ({
+          _id,
           name,
           image,
         }));
@@ -102,6 +106,16 @@ const HomeScreen = () => {
     fetchBanners();
   }, []);
 
+  const handleBrandPress = (brandId, brandName) => {
+    // Navigate to BrandProductsScreen with brandId
+    navigation.navigate("BrandProductsScreen", { brandId, brandName });
+  };
+
+  const handleCategoryPress = (categoryId, categoryName) => {
+    // Navigate to BrandProductsScreen with brandId
+    navigation.navigate("CategoryProductsScreen", { categoryId, categoryName });
+  };
+
   return (
     <View style={styles.container}>
       <HeaderComponent />
@@ -141,11 +155,18 @@ const HomeScreen = () => {
           contentContainerStyle={styles.categoryScroll}
         >
           {categories.map((category, index) => (
-            <TouchableOpacity key={index} style={styles.categoryCard}>
+            <TouchableOpacity
+              key={index}
+              style={styles.categoryCard}
+              onPress={() => {
+                handleCategoryPress(category._id, category.name);
+              }}
+            >
               <Image
                 source={{ uri: category.image }}
                 style={styles.categoryImage}
               />
+
               <Text style={styles.categoryLabel}>{category.name}</Text>
             </TouchableOpacity>
           ))}
@@ -157,7 +178,13 @@ const HomeScreen = () => {
           contentContainerStyle={styles.categoryScroll}
         >
           {brands.map((brand, index) => (
-            <TouchableOpacity key={index} style={styles.categoryCard}>
+            <TouchableOpacity
+              key={index}
+              style={styles.categoryCard}
+              onPress={() => {
+                handleBrandPress(brand._id, brand.name);
+              }}
+            >
               <Image
                 source={{ uri: brand.image }}
                 style={styles.categoryImage}

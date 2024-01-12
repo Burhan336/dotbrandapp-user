@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  Text,
   ScrollView,
-  Image,
   StyleSheet,
-  TouchableOpacity,
   TextInput,
-  Button,
   ActivityIndicator,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -15,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomNavigationBar from "../common/BottomNavigator";
 import HeaderComponent from "../common/Header";
 import Toast from "../common/Toast";
+import ProductCard from "../common/ProductCard";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -148,45 +145,12 @@ const Products = () => {
         </View>
         <View style={styles.productsContainer}>
           {products.map((product) => (
-            <TouchableOpacity key={product.id} style={styles.productCard}>
-              <Image
-                source={{ uri: product.image }}
-                style={styles.productImage}
-              />
-              <View style={styles.productDetailsContainer}>
-                <Text style={styles.productName}>{product.name}</Text>
-                <Text style={styles.productPrice}>{product.price}</Text>
-                <View style={styles.quantityContainer}>
-                  <TouchableOpacity onPress={() => changeQuantity("-")}>
-                    <Icon name="remove-outline" size={20} color="#000" />
-                  </TouchableOpacity>
-                  <Text style={styles.quantityText}>1</Text>
-                  <TouchableOpacity onPress={() => changeQuantity("+")}>
-                    <Icon name="add-outline" size={20} color="#000" />
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    style={styles.addToCartButton}
-                    onPress={() => addToCart(product.id)}
-                  >
-                    <Icon
-                      name="cart-outline"
-                      size={20}
-                      color="#fff"
-                      style={styles.cartIcon}
-                    />
-                    <Text style={styles.addToCartButtonText}>Add to Cart</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.wishlistIcon}
-                    onPress={() => addToWishlist(product.id)}
-                  >
-                    <Icon name="heart-outline" size={20} color="#b60909" />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </TouchableOpacity>
+            <ProductCard
+              key={product.id}
+              product={product}
+              addToCart={(productId) => addToCart(productId)}
+              addToWishlist={(productId) => addToWishlist(productId)}
+            />
           ))}
         </View>
       </ScrollView>
@@ -209,6 +173,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f9f9f9",
+  },
+  contentContainer: {
+    paddingHorizontal: 10,
+    paddingTop: 10,
   },
   loader: {
     position: "absolute",
@@ -255,36 +223,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
-
-  productCard: {
-    marginLeft: 2,
-    width: "48%",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    marginBottom: 20,
-    elevation: 5,
-    overflow: "hidden",
-  },
-
-  productImage: {
-    width: "100%",
-    height: 120, // Fixed height for product images
-    resizeMode: "cover",
-  },
-  productName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 5,
-    maxHeight: 22,
-    overflow: "hidden",
-  },
-
-  productPrice: {
-    fontSize: 16,
-    marginBottom: 10,
-    maxHeight: 20, // Limit the maximum height of the price text
-  },
-
   quantityContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -296,43 +234,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 20,
   },
-
   quantityText: {
     fontSize: 16,
     paddingHorizontal: 10,
     fontWeight: "bold",
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: "auto", // This will push the button container to the bottom of the card
-  },
-
-  addToCartButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#3c088f",
-    borderRadius: 5,
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-    marginRight: 5,
-  },
-  cartIcon: {
-    marginRight: 5,
-  },
-
-  wishlistIcon: {
-    padding: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#b60909",
-  },
-  addToCartButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    paddingVertical: 8,
-    fontSize: 12,
   },
 });
 
