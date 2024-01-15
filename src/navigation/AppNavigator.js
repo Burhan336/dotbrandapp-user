@@ -11,16 +11,19 @@ import BrandProductsScreen from "../screens/BrandProductsScreen";
 import CategoryProductsScreen from "../screens/CategoryProductsScreen";
 import OrderListingScreen from "../screens/OrderListingScreen";
 import OrderDetailsScreen from "../screens/OrderDetailsScreen";
-
-// import BottomNavigationBar from "../common/BottomNavigator";
-// import ProductsByCategory from "../screens/ProductsByCategory";
+import SplashScreen from "../screens/SplashScreen";
 
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LoginScreen">
+      <Stack.Navigator initialRouteName="SplashScreen">
+        <Stack.Screen
+          name="SplashScreen"
+          component={SplashScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
@@ -31,21 +34,11 @@ const AppNavigator = () => {
           component={Home}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen
-          name="Search"
-          component={Search}
-          options={{ headerShown: false }}
-     /> */}
         <Stack.Screen
           name="Products"
           component={Products}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen
-          name="ProductsByCategory"
-          component={ProductsByCategory}
-          options={{ headerShown: false }}
-        /> */}
         <Stack.Screen
           name="BrandProductsScreen"
           component={BrandProductsScreen}

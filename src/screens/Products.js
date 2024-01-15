@@ -14,10 +14,12 @@ import Toast from "../common/Toast";
 import ProductCard from "../common/ProductCard";
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +43,8 @@ const Products = () => {
             image: images[0], // Assuming the first image is to be displayed
           })
         );
-        setProducts(productsData);
+        setAllProducts(productsData);
+        setFilteredProducts(productsData);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -51,6 +54,14 @@ const Products = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // Filter products based on searchQuery
+    const filtered = allProducts.filter((product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredProducts(filtered);
+  }, [searchQuery, allProducts]);
 
   const addToCart = async (productId) => {
     try {
@@ -140,11 +151,16 @@ const Products = () => {
               color="#000"
               style={styles.searchIcon}
             />
-            <TextInput placeholder="Search..." style={styles.searchInput} />
+            <TextInput
+              placeholder="Search..."
+              style={styles.searchInput}
+              value={searchQuery}
+              onChangeText={(text) => setSearchQuery(text)}
+            />
           </View>
         </View>
         <View style={styles.productsContainer}>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
               product={product}

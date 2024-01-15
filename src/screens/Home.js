@@ -13,17 +13,37 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomNavigationBar from "../common/BottomNavigator"; // Assuming you've imported the BottomNavigationBar component
 import HeaderComponent from "../common/Header";
+import { jwtDecode } from "jwt-decode";
+
 import { useNavigation } from "@react-navigation/native";
+import { decode, encode } from "base-64";
+
+// Polyfill for global environment
+if (!global.btoa) {
+  global.btoa = encode;
+}
+if (!global.atob) {
+  global.atob = decode;
+}
 
 const HomeScreen = () => {
-  // Replace placeholders with actual data and styles for better aesthetics
-  const username = "John Doe";
+  const [username, setUsername] = useState("");
   const profileImage = require("../images/profile-user.png"); // Replace with the path to your profile image
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+
+  const decodeToken = (token) => {
+    try {
+      const decodedToken = jwtDecode(token);
+      return decodedToken?.email || "";
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return "";
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,6 +58,7 @@ const HomeScreen = () => {
             },
           }
         );
+
         const data = await response.json();
         const categoriesData = data.payload.categories.map(
           ({ _id, name, image }) => ({ _id, name, image })
@@ -62,6 +83,10 @@ const HomeScreen = () => {
             },
           }
         );
+        const decodedEmail = decodeToken(accessToken);
+
+        setUsername(decodedEmail);
+
         const data = await response.json();
         const BrandsData = data.payload.brands.map(({ _id, name, image }) => ({
           _id,
@@ -124,15 +149,6 @@ const HomeScreen = () => {
           <View style={styles.profileInfo}>
             <Image source={profileImage} style={styles.profileImage} />
             <Text style={styles.welcomeText}>Welcome, {username}</Text>
-          </View>
-          <View style={styles.searchBar}>
-            <Icon
-              name="ios-search"
-              size={25}
-              color="#000"
-              style={styles.searchIcon}
-            />
-            <TextInput placeholder="Search..." style={styles.searchInput} />
           </View>
         </View>
         <ScrollView
@@ -216,31 +232,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   profileImage: {
+    marginTop: 20,
     width: 40,
     height: 40,
     borderRadius: 20,
     marginRight: 10,
   },
   welcomeText: {
+    marginTop: 20,
     fontSize: 18,
     fontWeight: "bold",
   },
-  searchBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    marginTop: 10,
-  },
-  searchIcon: {
-    marginRight: 5,
-  },
-  searchInput: {
-    flex: 1,
-    height: 50,
-  },
+
   bannerScroll: {
     paddingHorizontal: 20,
     marginBottom: 10,

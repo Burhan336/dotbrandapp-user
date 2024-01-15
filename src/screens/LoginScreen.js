@@ -10,15 +10,16 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { Formik } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
 import AuthStorage from "../authentication/AuthStorage";
+import { Feather } from "@expo/vector-icons";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [messageType, setMessageType] = useState("");
   const [loginMessage, setLoginMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // New state for loader
 
   const navigation = useNavigation();
@@ -33,97 +34,162 @@ const LoginScreen = () => {
     }, 5000);
   };
 
-  const handleLogin = () => {
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string().required("Password is required"),
+  });
+
+  const handleLogin = (values, { setSubmitting }) => {
     const apiUrl = "https://dotbrand-api.onrender.com/api/v1/auth/login";
     const requestBody = {
-      email,
-      password,
+      email: values.email,
+      password: values.password,
       role: "user",
     };
     setIsLoading(true);
 
-    axios.post(apiUrl, requestBody).then((response) => {
-      const { accessToken } = response.data.payload.token;
+    axios
+      .post(apiUrl, requestBody)
+      .then((response) => {
+        const { accessToken } = response.data.payload.token;
 
-      if (accessToken) {
-        AsyncStorage.setItem("accessToken", accessToken)
-          .then(() => {
-            console.log("Access token stored successfully");
-            console.log(accessToken);
-            // Toggle loader back to false after successful login
-            // setIsLoggedIn(true);
-            AuthStorage.setLoggedIn();
-
-            navigation.navigate("Home");
-            showLoginMessage("Login successful!", "success");
-            setIsLoading(false);
-          })
-          .catch((error) => {
-            // console.error("Error storing access token:", error);
-            showLoginMessage("Login failed! Please try again.", "error");
-            // Handle error, such as showing an error message to the user
-          });
-      } else {
-        setIsLoading(false); // Toggle loader back to false if accessToken is null or undefined
-        // console.error("Access token is null or undefined");
+        if (accessToken) {
+          AsyncStorage.setItem("accessToken", accessToken)
+            .then(() => {
+              console.log("Access token stored successfully");
+              console.log(accessToken);
+              setIsLoading(false); // Toggle loader back to false after successful login
+              AuthStorage.setLoggedIn();
+              showLoginMessage("Login successful!", "success");
+              navigation.navigate("Home");
+            })
+            .catch((error) => {
+              setIsLoading(false); // Toggle loader back to false if storing token fails
+              // console.error("Error storing access token:", error);
+              showLoginMessage("Login failed! Please try again.", "error");
+              // Handle error, such as showing an error message to the user
+            });
+        } else {
+          setIsLoading(false); // Toggle loader back to false if accessToken is null or undefined
+          // console.error("Access token is null or undefined");
+          showLoginMessage("Login failed! Please try again.", "error");
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false); // Toggle loader back to false if login fails
+        // console.error("Login failed:", error);
         showLoginMessage("Login failed! Please try again.", "error");
-      }
-    });
-
-    // // Add your login logic here
-    // console.log('Email:', email);
-    // console.log('Password:', password);
-    // // Example: Validate credentials and navigate to the next screen
+      })
+      .finally(() => {
+        setSubmitting(false); // Ensure submission state is updated in Formik
+      });
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.backgroundCircle} />
-      <View style={[styles.backgroundCircle, styles.backgroundCircle2]} />
-      <View
-        style={[
-          styles.backgroundCircle,
-          styles.backgroundCircle2,
-          styles.backgroundCircle3,
-        ]}
-      />
-      <View
-        style={[
-          styles.backgroundCircle,
-          styles.backgroundCircle2,
-          styles.backgroundCircle3,
-          styles.backgroundCircle4,
-        ]}
-      />
-      <Image source={require("../images/logo.png")} style={styles.logo} />
-      <View style={styles.inputContainer}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Email"
-            placeholderTextColor="#333"
-            onChangeText={(text) => setEmail(text)}
+    <Formik
+      initialValues={{ email: "", password: "" }}
+      validationSchema={validationSchema}
+      onSubmit={handleLogin}
+    >
+      {({
+        values,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        isSubmitting,
+        touched,
+        errors,
+      }) => (
+        <View style={styles.container}>
+          <View style={styles.backgroundCircle} />
+          <View style={[styles.backgroundCircle, styles.backgroundCircle2]} />
+          <View
+            style={[
+              styles.backgroundCircle,
+              styles.backgroundCircle2,
+              styles.backgroundCircle3,
+            ]}
           />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Password"
-            placeholderTextColor="#333"
-            secureTextEntry={true}
-            onChangeText={(text) => setPassword(text)}
+          <View
+            style={[
+              styles.backgroundCircle,
+              styles.backgroundCircle2,
+              styles.backgroundCircle3,
+              styles.backgroundCircle4,
+            ]}
           />
-        </View>
-        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-          <Text style={styles.loginText}>LOGIN</Text>
-        </TouchableOpacity>
-        {isLoading && (
-          <View style={styles.loader}>
-            <ActivityIndicator size="large" color="#110579" />
+          <Image source={require("../images/logo.png")} style={styles.logo} />
+          <View style={styles.inputContainer}>
+            <View style={styles.inputView}>
+              <TextInput
+                placeholder="Email"
+                style={styles.inputText}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                value={values.email}
+              />
+            </View>
+            {touched.email && errors.email && (
+              <Text style={styles.errorText}>{errors.email}</Text>
+            )}
+            <View style={styles.inputView}>
+              <TextInput
+                placeholder="Password"
+                style={styles.inputText}
+                secureTextEntry={!showPassword}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                value={values.password}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowPassword(!showPassword)} // Toggle showPassword state on press
+              >
+                <Feather
+                  name={showPassword ? "eye" : "eye-off"}
+                  size={20}
+                  color="#333"
+                />
+              </TouchableOpacity>
+            </View>
+            {touched.password && errors.password && (
+              <Text style={styles.errorText}>{errors.password}</Text>
+            )}
+            <TouchableOpacity
+              style={styles.loginBtn}
+              onPress={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.loginText}>Login</Text>
+              )}
+            </TouchableOpacity>
+            {/* {isLoading && (
+              <View style={styles.loader}>
+                <ActivityIndicator size="large" color="#110579" />
+              </View>
+            )} */}
+            {loginMessage !== "" && (
+              <View style={styles.loginMessageContainer}>
+                <Text
+                  style={
+                    messageType === "success"
+                      ? styles.successText
+                      : styles.errorText
+                  }
+                >
+                  {loginMessage}
+                </Text>
+              </View>
+            )}
           </View>
-        )}
-      </View>
-    </View>
+        </View>
+      )}
+    </Formik>
   );
 };
 
@@ -173,9 +239,38 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
   },
+  loginButton: {
+    backgroundColor: "#8a0b0b",
+    borderRadius: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 60,
+    alignItems: "center",
+    marginTop: 60,
+  },
   loginText: {
-    color: "#fff6f6",
+    color: "#fff",
     fontWeight: "bold",
+    fontSize: 16,
+  },
+
+  loginMessageContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    top: 30,
+    left: 0,
+    right: 0,
+    zIndex: 9999,
+  },
+  successText: {
+    color: "green",
+    fontSize: 16,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 16,
+    marginTop: -15,
+    marginBottom: 15,
   },
   backgroundCircle: {
     width: 150,
@@ -209,9 +304,14 @@ const styles = StyleSheet.create({
     height: 300,
     backgroundColor: "#686462",
     top: undefined,
-    left: -250,
+    left: -260,
     bottom: 200,
     right: undefined,
+  },
+  eyeIcon: {
+    position: "absolute",
+    top: 12,
+    right: 20,
   },
 });
 

@@ -1,14 +1,31 @@
 // ProfileScreen.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import HeaderComponent from "../common/Header";
 import BottomNavigationBar from "../common/BottomNavigator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
 
 const Profile = ({ navigation }) => {
-  const username = "John Doe";
-  const email = "john.doe@example.com";
+  const username = "User";
+  const [email, setEmail] = useState("");
   const profileImage = require("../images/profile-user.png"); // Replace with the path to your profile image
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accessToken = await AsyncStorage.getItem("accessToken");
+        const decodedToken = jwtDecode(accessToken);
+
+        setEmail(decodedToken.email || "");
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <View style={styles.container}>
