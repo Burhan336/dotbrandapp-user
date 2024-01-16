@@ -12,6 +12,7 @@ import CategoryProductsScreen from "../screens/CategoryProductsScreen";
 import OrderListingScreen from "../screens/OrderListingScreen";
 import OrderDetailsScreen from "../screens/OrderDetailsScreen";
 import SplashScreen from "../screens/SplashScreen";
+import CheckoutScreen from "../screens/CheckoutScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -72,6 +73,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="OrderDetailsScreen"
           component={OrderDetailsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CheckoutScreen"
+          component={CheckoutScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

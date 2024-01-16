@@ -22,6 +22,9 @@ const Wishlist = () => {
   const [reloadData, setReloadData] = useState(false); // New state variable
   const [loading, setLoading] = useState(true);
 
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,6 +51,14 @@ const Wishlist = () => {
 
     fetchData();
   }, [reloadData]);
+
+  useEffect(() => {
+    // Filter products based on searchQuery
+    const filtered = wishlist.filter((wishlist) =>
+      wishlist.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredProducts(filtered);
+  }, [searchQuery, wishlist]);
 
   const removeFromWishlist = async (productId) => {
     try {
@@ -100,15 +111,19 @@ const Wishlist = () => {
               color="#000"
               style={styles.searchIcon}
             />
-            <TextInput placeholder="Search..." style={styles.searchInput} />
+            <TextInput
+              placeholder="Search..."
+              style={styles.searchInput}
+              onChangeText={(text) => setSearchQuery(text)}
+            />
           </View>
         </View>
-        {wishlist.map((item) => (
+        {filteredProducts.map((item) => (
           <TouchableOpacity key={item._id} style={styles.itemContainer}>
             <Image source={{ uri: item.images[0] }} style={styles.itemImage} />
             <View style={styles.itemDetails}>
               <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemPrice}>${item.salePrice}</Text>
+              <Text style={styles.itemPrice}>Rs {item.salePrice}</Text>
               <Text style={styles.itemCategory}>{item.category.name}</Text>
               <Text style={styles.itemBrand}>{item.brand.name}</Text>
             </View>
@@ -126,7 +141,7 @@ const Wishlist = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <BottomNavigationBar />
+      {/* <BottomNavigationBar /> */}
       <Toast
         message={toastMessage}
         showToast={showToast}

@@ -12,6 +12,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import HeaderComponent from "../common/Header";
 import BottomNavigationBar from "../common/BottomNavigator";
 import Toast from "../common/Toast";
+import { useNavigation } from "@react-navigation/native";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -21,6 +22,8 @@ const Cart = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [reloadData, setReloadData] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,6 +92,41 @@ const Cart = () => {
       setLoading(false);
     }
   };
+  const handleProceedToCheckout = () => {
+    navigation.navigate("CheckoutScreen");
+  };
+  // const initiatePayment = async () => {
+  //   try {
+  //     const accessToken = await AsyncStorage.getItem("accessToken");
+  //     const response = await fetch(
+  //       "https://dotbrand-api.onrender.com/api/v1/user/order",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //         // Include any additional data needed for your order creation
+  //         body: JSON.stringify({
+  //           // ...additional order data
+  //         }),
+  //       }
+  //     );
+
+  //     const data = await response.json();
+
+  //     if (data.statusCode === 200) {
+  //       // Use the Stripe SDK to open a WebView for payment
+  //       const { sessionId } = data.payload;
+  //       setCheckoutUrl(`https://checkout.stripe.com/${sessionId}`);
+  //     } else {
+  //       // Handle error from your server
+  //       console.error("Error creating checkout session:", data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error initiating payment:", error);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -101,7 +139,9 @@ const Cart = () => {
               <Text style={styles.itemQuantity}>
                 Quantity: {product.quantity}
               </Text>
-              <Text style={styles.itemPrice}>Price: ${product.totalPrice}</Text>
+              <Text style={styles.itemPrice}>
+                Price: Rs {product.totalPrice}
+              </Text>
             </View>
             <TouchableOpacity onPress={() => deleteFromCart(product._id)}>
               {/* Add delete functionality */}
@@ -116,14 +156,17 @@ const Cart = () => {
           </View>
           <View style={styles.totalSection}>
             <Text style={styles.totalTitle}>Total Price</Text>
-            <Text style={styles.totalValue}>${totalPrice}</Text>
+            <Text style={styles.totalValue}>Rs {totalPrice}</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.checkoutButton}>
+        <TouchableOpacity
+          style={styles.checkoutButton}
+          onPress={handleProceedToCheckout}
+        >
           <Text style={styles.checkoutText}>Proceed to Checkout</Text>
         </TouchableOpacity>
       </ScrollView>
-      <BottomNavigationBar />
+      {/* <BottomNavigationBar /> */}
       <Toast
         message={toastMessage}
         showToast={showToast}

@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import HeaderComponent from "../common/Header";
 import BottomNavigationBar from "../common/BottomNavigator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AuthStorage from "../authentication/AuthStorage";
 import { jwtDecode } from "jwt-decode";
 
 const Profile = ({ navigation }) => {
@@ -27,6 +28,15 @@ const Profile = ({ navigation }) => {
     fetchData();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await AuthStorage.clearLoggedIn(navigation);
+    } catch (error) {
+      console.error("Error logging out:", error);
+      // Handle error if needed
+    }
+  };
+
   return (
     <View style={styles.container}>
       <HeaderComponent />
@@ -39,24 +49,48 @@ const Profile = ({ navigation }) => {
         <View style={styles.actionsSection}>
           <TouchableOpacity
             style={styles.actionButton}
+            onPress={() => navigation.navigate("Home")}
+          >
+            <Icon
+              name="ios-home"
+              size={25}
+              color="#2000ad"
+              style={styles.actionIcon}
+            />
+            <Text style={styles.actionText}>Home</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionButton}
             onPress={() => navigation.navigate("OrderListingScreen")}
           >
             <Icon
               name="ios-list"
               size={25}
-              color="#000"
+              color="#6c00aa"
               style={styles.actionIcon}
             />
             <Text style={styles.actionText}>My Orders</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={() => console.log("Implement other actions")}
+            onPress={() => navigation.navigate("Cart")}
+          >
+            <Icon
+              name="ios-cart"
+              size={25}
+              color="#0ea815"
+              style={styles.actionIcon}
+            />
+            <Text style={styles.actionText}>Cart</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => navigation.navigate("Wishlist")}
           >
             <Icon
               name="ios-heart"
               size={25}
-              color="#000"
+              color="#c70000"
               style={styles.actionIcon}
             />
             <Text style={styles.actionText}>Wishlist</Text>
@@ -68,26 +102,23 @@ const Profile = ({ navigation }) => {
             <Icon
               name="ios-settings"
               size={25}
-              color="#000"
+              color="#6b6767"
               style={styles.actionIcon}
             />
             <Text style={styles.actionText}>Settings</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={() => console.log("Implement other actions")}
-          >
+          <TouchableOpacity style={styles.actionButton} onPress={handleLogout}>
             <Icon
               name="ios-log-out"
               size={25}
-              color="#000"
+              color="#ff0000"
               style={styles.actionIcon}
             />
             <Text style={styles.actionText}>Logout</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <BottomNavigationBar />
+      {/* <BottomNavigationBar /> */}
     </View>
   );
 };

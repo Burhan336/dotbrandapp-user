@@ -39,7 +39,7 @@ const Products = () => {
           ({ _id, name, salePrice, images }) => ({
             id: _id,
             name,
-            price: `$${salePrice}`,
+            price: `Rs ${salePrice}`,
             image: images[0], // Assuming the first image is to be displayed
           })
         );
@@ -170,7 +170,7 @@ const Products = () => {
           ))}
         </View>
       </ScrollView>
-      <BottomNavigationBar />
+      {/* <BottomNavigationBar /> */}
       <Toast
         message={toastMessage}
         showToast={showToast}

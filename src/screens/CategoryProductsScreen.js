@@ -1,15 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import ProductCard from "../common/ProductCard"; // Import the ProductCard component
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import HeaderComponent from "../common/Header";
 import BottomNavigationBar from "../common/BottomNavigator";
 import Icon from "react-native-vector-icons/Ionicons";
+import Toast from "../common/Toast";
 
 const CategoryProductsScreen = ({ route }) => {
   const [products, setProducts] = useState([]);
   const categoryId = route.params.categoryId; // Get brandId from navigation params
   const categoryName = route.params.categoryName;
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBrandProducts = async () => {
@@ -40,6 +52,7 @@ const CategoryProductsScreen = ({ route }) => {
         );
         if (response.ok) {
           setProducts(productsData);
+          setLoading(false);
         } else {
           console.error("Error fetching brand products:", data);
         }
@@ -51,6 +64,82 @@ const CategoryProductsScreen = ({ route }) => {
     fetchBrandProducts();
   }, [categoryId]);
 
+  const addToCart = async (productId) => {
+    try {
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      setLoading(true);
+      const response = await fetch(
+        "https://dotbrand-api.onrender.com/api/v1/user/cart",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            productId,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setToastMessage("Product added to cart!");
+        setShowToast(true);
+        setLoading(false);
+        // Perform any additional actions upon successful addition to cart
+      } else {
+        setToastMessage("Failed to add product to cart");
+        setShowToast(true);
+        setLoading(false);
+        // Handle error if adding to cart fails
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      setToastMessage("Error adding product to cart");
+      setShowToast(true);
+      setLoading(false);
+      // Handle any network or other errors that occur
+    }
+  };
+
+  const addToWishlist = async (productId) => {
+    try {
+      setLoading(true);
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      const response = await fetch(
+        "https://dotbrand-api.onrender.com/api/v1/user/wishlist",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            productId,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setToastMessage("Product added to wishlist!");
+        setShowToast(true);
+        setLoading(false);
+        // Perform any additional actions upon successful addition to cart
+      } else {
+        setToastMessage("Failed to add product to wishlist");
+        setShowToast(true);
+        setLoading(false);
+        // Handle error if adding to cart fails
+      }
+    } catch (error) {
+      console.error("Error adding product to wishlist:", error);
+      setToastMessage("Error adding product to wishlist");
+      setShowToast(true);
+      setLoading(false);
+      // Handle any network or other errors that occur
+    }
+  };
+
   return (
     <View style={styles.container}>
       <HeaderComponent />
@@ -59,27 +148,39 @@ const CategoryProductsScreen = ({ route }) => {
           <Text style={styles.profileText}>{categoryName}</Text>
         </View>
         <View style={styles.productsContainer}>
-          {products ? (
+          {products && products.length > 0 ? (
             products.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
-                addToCart={(productId) => {
-                  // Handle add to cart logic
-                  console.log("Add to cart:", productId);
-                }}
-                addToWishlist={(productId) => {
-                  // Handle add to wishlist logic
-                  console.log("Add to wishlist:", productId);
-                }}
+                addToCart={(productId) => addToCart(productId)}
+                addToWishlist={(productId) => addToWishlist(productId)}
               />
             ))
           ) : (
-            <Text>No products available</Text>
+            <View style={styles.noProductsContainer}>
+              <Image
+                source={require("../images/empty1.png")} // Replace with your actual image path
+                style={styles.noProductsImage}
+              />
+              <Text style={styles.noProductsText}>
+                No products under this category are available to show here
+              </Text>
+            </View>
           )}
         </View>
       </ScrollView>
-      <BottomNavigationBar />
+      {/* <BottomNavigationBar /> */}
+      <Toast
+        message={toastMessage}
+        showToast={showToast}
+        setShowToast={setShowToast}
+      />
+      {loading && (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="#9f9fa5" />
+        </View>
+      )}
     </View>
   );
 };
@@ -122,6 +223,29 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  loader: {
+    position: "absolute",
+    top: "53%", // Position loader in the center vertically
+    left: "45%", // Position loader in the center horizontally
+    zIndex: 999, // Place loader on top of other elements
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noProductsContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+  },
+  noProductsImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 15,
+  },
+  noProductsText: {
+    fontSize: 16,
+    textAlign: "center",
+    color: "#555",
   },
 });
 

@@ -75,7 +75,7 @@ const OrderListingScreen = () => {
           ))}
         </View>
       </ScrollView>
-      <BottomNavigationBar />
+      {/* <BottomNavigationBar /> */}
     </View>
   );
 };
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 3,
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,

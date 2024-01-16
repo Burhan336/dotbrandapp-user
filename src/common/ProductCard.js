@@ -2,10 +2,15 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import LinearGradient from "react-native-linear-gradient";
 
 const ProductCard = ({ product, addToCart, addToWishlist }) => {
   return (
     <TouchableOpacity style={styles.productCard}>
+      {/* <LinearGradient
+        colors={["#e8e8e8", "#ffffff"]}
+        style={styles.gradientBackground}
+      /> */}
       <Image source={{ uri: product.image }} style={styles.productImage} />
       <View style={styles.productDetailsContainer}>
         <Text style={styles.productName}>{product.name}</Text>
@@ -43,11 +48,23 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     elevation: 5,
     overflow: "hidden",
+    position: "relative", // Required for LinearGradient overlay
+  },
+  gradientBackground: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    height: "100%",
+    borderRadius: 12,
   },
   productImage: {
-    width: "100%",
+    width: "92%",
     height: 120,
     resizeMode: "cover",
+    borderRadius: 12,
+    marginLeft: 7,
+    marginTop: 8,
   },
   productDetailsContainer: {
     padding: 10,
@@ -84,7 +101,7 @@ const styles = StyleSheet.create({
   },
   wishlistIcon: {
     padding: 8,
-    borderRadius: 20,
+    borderRadius: 50, // Increase the border radius for a circular shape
     borderWidth: 1,
     borderColor: "#b60909",
   },

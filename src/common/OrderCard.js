@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   status: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "normal",
     marginTop: 8,
     color: "#555",
   },
@@ -56,12 +56,12 @@ const styles = StyleSheet.create({
   },
   totalPrice: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "normal",
     marginTop: 8,
     color: "#555",
   },
   dateTime: {
-    fontWeight: "bold",
+    fontWeight: "normal",
     fontSize: 16,
     marginTop: 8,
     color: "#555",

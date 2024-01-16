@@ -66,7 +66,7 @@ const OrderDetailsScreen = ({ route }) => {
       <View style={styles.container}>
         <HeaderComponent />
         <Text>Loading...</Text>
-        <BottomNavigationBar />
+        {/* <BottomNavigationBar /> */}
       </View>
     );
   }
@@ -106,7 +106,7 @@ const OrderDetailsScreen = ({ route }) => {
             ))}
         </View>
       </ScrollView>
-      <BottomNavigationBar />
+      {/* <BottomNavigationBar /> */}
     </View>
   );
 };
