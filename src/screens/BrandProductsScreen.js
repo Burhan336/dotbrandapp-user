@@ -46,7 +46,7 @@ const BrandProductsScreen = ({ route }) => {
           ({ _id, name, salePrice, images }) => ({
             id: _id,
             name,
-            price: `$${salePrice}`,
+            price: `Rs ${salePrice}`,
             image: images[0], // Assuming the first image is to be displayed
           })
         );

@@ -64,8 +64,11 @@ const CheckoutScreen = () => {
       });
 
       // Open the URL in the device's default browser
-      await Linking.openURL(`https://checkout.stripe.com/${sessionId}`);
+      await Linking.openURL(
+        `https://checkout.stripe.com/c/pay/${sessionId}#fidkdWxOYHwnPyd1blpxYHZxWjA0S3RBRzJDUHF0bGlqQkJJcUBSfFNXYnNSZnJNcjZPUzc0QEc8Q1dMcGF3bkZWVUhGbE9PV0RMaHxOcF8xMGFmQnV8NkszX1xuS0didUdsSldxajdMd0Q8NTVXMUZLUjUzTicpJ2hsYXYnP34nYnBsYSc%2FJzcwYTQxZj1kKGc3ZGMoMTRgPChnY2ZjKDdnNTU8ND0xPTJgYDA9PGQ3MicpJ2hwbGEnPyczNDAxYGY0MCgyYWEyKDEzMWcoPGEzMChhZ2EwNWFjYzJnPGc9ZzRkMjwnKSd2bGEnPydhYTE3MzMwNChnZjZmKDE0Z2AoPGYwYSgyNzAzMjU1YDA3NjwxNjBmN2MneCknZ2BxZHYnP15YKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSd3YGNgd3dgd0p3bGJsayc%2FJ21xcXU%2FKippamZkaW1qdnE%2FNjU1NSd4JSUl`
+      );
 
+      console.log(`https://checkout.stripe.com/c/pay/${sessionId}`);
       setLoading(false);
     } catch (error) {
       console.error("Error initiating payment:", error);

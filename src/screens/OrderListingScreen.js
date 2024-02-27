@@ -67,7 +67,7 @@ const OrderListingScreen = () => {
                 order={{
                   orderId: order._id,
                   status: order.status,
-                  totalPrice: `$${order.totalPrice}`,
+                  totalPrice: `Rs ${order.totalPrice}`,
                   dateTime: new Date(order.createdAt).toLocaleString(),
                 }}
               />

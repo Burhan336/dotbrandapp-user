@@ -38,13 +38,13 @@ const OrderDetailsScreen = ({ route }) => {
 
           const simplifiedOrderDetails = {
             status,
-            totalPrice: `$${totalPrice}`,
+            totalPrice: `Rs ${totalPrice}`,
             createdAt: new Date(createdAt).toLocaleString(),
             items: orderItems.map(({ _id, productId, quantity }) => ({
               id: _id,
               name: productId.name,
               quantity: quantity,
-              price: `$${productId.salePrice}`,
+              price: `Rs ${productId.salePrice}`,
               image: productId.images[0],
             })),
           };

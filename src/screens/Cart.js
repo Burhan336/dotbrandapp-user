@@ -132,39 +132,48 @@ const Cart = () => {
     <View style={styles.container}>
       <HeaderComponent />
       <ScrollView contentContainerStyle={styles.scrollView}>
-        {cartItems.map((product) => (
-          <View key={product._id} style={styles.itemContainer}>
-            <View style={styles.itemDetails}>
-              <Text style={styles.itemName}>{product.productName}</Text>
-              <Text style={styles.itemQuantity}>
-                Quantity: {product.quantity}
-              </Text>
-              <Text style={styles.itemPrice}>
-                Price: Rs {product.totalPrice}
-              </Text>
+        {cartItems.length === 0 ? (
+          <View style={styles.emptyCartContainer}>
+            <Text style={styles.emptyCartText}>Your cart is empty</Text>
+            {/* Add any additional UI or components for an empty cart */}
+          </View>
+        ) : (
+          <>
+            {cartItems.map((product) => (
+              <View key={product._id} style={styles.itemContainer}>
+                <View style={styles.itemDetails}>
+                  <Text style={styles.itemName}>{product.productName}</Text>
+                  <Text style={styles.itemQuantity}>
+                    Quantity: {product.quantity}
+                  </Text>
+                  <Text style={styles.itemPrice}>
+                    Price: Rs {product.totalPrice}
+                  </Text>
+                </View>
+                <TouchableOpacity onPress={() => deleteFromCart(product._id)}>
+                  {/* Add delete functionality */}
+                  <Icon name="trash-outline" size={30} color="#ff0000" />
+                </TouchableOpacity>
+              </View>
+            ))}
+            <View style={styles.totalContainer}>
+              <View style={styles.totalSection}>
+                <Text style={styles.totalTitle}>Total Quantity</Text>
+                <Text style={styles.totalValue}>{totalQuantity}</Text>
+              </View>
+              <View style={styles.totalSection}>
+                <Text style={styles.totalTitle}>Total Price</Text>
+                <Text style={styles.totalValue}>Rs {totalPrice}</Text>
+              </View>
             </View>
-            <TouchableOpacity onPress={() => deleteFromCart(product._id)}>
-              {/* Add delete functionality */}
-              <Icon name="trash-outline" size={30} color="#ff0000" />
+            <TouchableOpacity
+              style={styles.checkoutButton}
+              onPress={handleProceedToCheckout}
+            >
+              <Text style={styles.checkoutText}>Proceed to Checkout</Text>
             </TouchableOpacity>
-          </View>
-        ))}
-        <View style={styles.totalContainer}>
-          <View style={styles.totalSection}>
-            <Text style={styles.totalTitle}>Total Quantity</Text>
-            <Text style={styles.totalValue}>{totalQuantity}</Text>
-          </View>
-          <View style={styles.totalSection}>
-            <Text style={styles.totalTitle}>Total Price</Text>
-            <Text style={styles.totalValue}>Rs {totalPrice}</Text>
-          </View>
-        </View>
-        <TouchableOpacity
-          style={styles.checkoutButton}
-          onPress={handleProceedToCheckout}
-        >
-          <Text style={styles.checkoutText}>Proceed to Checkout</Text>
-        </TouchableOpacity>
+          </>
+        )}
       </ScrollView>
       {/* <BottomNavigationBar /> */}
       <Toast
@@ -276,6 +285,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  emptyCartContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyCartText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#3c088f",
   },
 });
 

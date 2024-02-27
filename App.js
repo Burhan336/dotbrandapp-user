@@ -5,7 +5,7 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 const App = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <StripeProvider publishableKey="pk_test_51OSQYeGwHkul6KUrPCKVg9521SN0X2e9T46lSltPSGjY0MIio7vuR2Wpoyaxts8uErNGvMMICsCJpABsMYIMLPTI00UVMuGza6">
+      <StripeProvider publishableKey="pk_test_51NqDB7FUtqiloGGLtEWyVRgvWcwHw3JV21EB9FRIudrkCSPMCiJJRAImyKuZ45dcGpy3N6ZYkNBgpBiORto2IrA900R4CNW06K">
         <AppNavigator />
       </StripeProvider>
     </GestureHandlerRootView>
