@@ -21,7 +21,7 @@ Welcome to DotBrand, your premier white-label ecommerce solution tailored for ph
 To get started with DotBrand Mobile Application, follow these simple steps:
 
 1. **Clone the Repository**: Clone the DotBrand Mobile Application repository to your local machine using the following command:
-   https://github.com/Burhan336/dotbrandapp-user.git
+   git clone https://github.com/Burhan336/dotbrandapp-user.git
 
 2. **Navigate to the Directory**: Change your current directory to the cloned repository:
    cd dotbrandapp-user
