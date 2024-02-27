@@ -21,3 +21,25 @@ Welcome to DotBrand, your premier white-label ecommerce solution tailored for ph
 To get started with DotBrand Mobile Application, follow these simple steps:
 
 1. **Clone the Repository**: Clone the DotBrand Mobile Application repository to your local machine using the following command:
+   https://github.com/Burhan336/dotbrandapp-user.git
+
+2. **Navigate to the Directory**: Change your current directory to the cloned repository:
+   cd dotbrandapp-user
+
+3. **Install Dependencies**: Install the necessary dependencies using a package manager such as npm or yarn:
+   npm install
+
+4. **Run the Application**: Start the application locally:
+   npm start
+
+5. **Customize Configuration**: Customize the configuration files as needed, including branding, API endpoints, and any other settings relevant to your pharmacy business.
+
+6. **Launch and Promotion**: Once you're satisfied with the customization and testing, deploy the application to your preferred hosting platform. Promote the app to your customers through various channels to maximize its reach.
+
+## Support and Feedback
+
+We are committed to providing exceptional support to ensure your experience with DotBrand Mobile Application is seamless. If you encounter any issues or have any feedback, please don't hesitate to reach out to our support team at [burhan.sq4906@gmail.com](mailto:burhan.sq4906@gmail.com).
+
+## About Us
+
+DotBrand is a leading provider of white-label ecommerce solutions for pharmacies. Our mission is to empower pharmacies to thrive in the digital age by providing them with innovative tools and technologies. Learn more about us [here](https://www.dotbrand.com/about).
